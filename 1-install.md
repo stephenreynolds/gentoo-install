@@ -47,13 +47,14 @@ umount /mnt/gentoo
 
 ```
 
-mount -t btrfs -o defaults,noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@ -L ROOT /mnt/gentoo
-mkdir -p /mnt/gentoo/{boot,home,var/gentoo/distfiles,var/db/repos}
+mount -t btrfs -o noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@ -L ROOT /mnt/gentoo
+mkdir -p /mnt/gentoo/{boot,home,var/cache/distfiles,var/db/repos}
 
 mount /dev/nvme0n1p1 /mnt/gentoo/boot
-mount -t btrfs -o defaults,noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@home -L ROOT /mnt/gentoo/home
-mount -t btrfs -o defaults,noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@distfiles -L ROOT /mnt/gentoo/var/cache/distfiles
-mount -t btrfs -o defaults,noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@repos -L ROOT /mnt/gentoo/var/db/repos
+mount -t btrfs -o noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@home -L ROOT /mnt/gentoo/home
+mount -t btrfs -o noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@snapshots -L ROOT /mnt/gentoo/.snapshots
+mount -t btrfs -o noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@distfiles -L ROOT /mnt/gentoo/var/cache/distfiles
+mount -t btrfs -o noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@repos -L ROOT /mnt/gentoo/var/db/repos
 ```
 
 ## Install Stage 3
@@ -78,9 +79,10 @@ rm stage3-*.tar.xz
 Add the following flags to make.conf: 
 ```
 COMMON_FLAGS="-march=skylake -O2 -pipe"
-MAKEOPTS="-j4 -l4"
-EMERGE_DEFAULT_OPTS="--jobs=2 --ask --quiet --verbose"
+MAKEOPTS="-j4"
+EMERGE_DEFAULT_OPTS="--jobs=2 --load-average=7.6 --ask --quiet --verbose"
 PORTAGE_NICENESS="15"
+FEATURES="parallel-install"
 ```
 
 ### Configure mirrors
@@ -163,7 +165,7 @@ ACCEPT_LICENSE="*"
 
 ```
 echo "America/Detroit" > /etc/timezone
-ln -sf ../usr/share/zoneinfo/Europe/Brussels /etc/localtime
+ln -sf ../usr/share/zoneinfo/America/Detroit /etc/localtime
 ```
 
 ### Locale generation
@@ -221,20 +223,26 @@ dracut --kver=5.15.74-gentoo --zstd
 
 ## Create fstab
 
+```
+echo "" > /etc/fstab
+echo "UUID=$(lsblk -no UUID /dev/nvme0n1p1)" >> /etc/fstab
+for i in {1..5}; do echo "UUID=$(lsblk -no UUID /dev/nvme0n1p2)" >> /etc/fstab ; done
+```
+
 Located at /etc/fstab:
 ```
 # /dev/nvme0n1p1
 UUID=<UUID>     /boot/efi               vfat        noatime     0 2
 
 # /dev/nvme0n1p2 and /dev/nvme1n1p1 in RAIDm1d0
-UUID=<UUID>     /                       btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@          0 0
-UUID=<UUID>     /home                   btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@home      0 0
-UUID=<UUID>     /.snapshots             btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@snapshots 0 0
-UUID=<UUID>     /var/db/repos           btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@repos     0 0
-UUID=<UUID>     /var/cache/distfiles    btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@distfiles 0 0
+UUID=<UUID>     /                       btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@           0 0
+UUID=<UUID>     /home                   btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@home       0 0
+UUID=<UUID>     /.snapshots             btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@snapshots  0 0
+UUID=<UUID>     /var/db/repos           btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@repos      0 0
+UUID=<UUID>     /var/cache/distfiles    btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@distfiles  0 0
 
 # tmpfs
-tmpfs           /var/tmp/portage        tmpfs       rw,nosuid,noatime,nodev,size=4G,mode=775,uid=portage,gid=portage,x-mount.mkdir=775      0 0
+tmpfs           /var/tmp/portage        tmpfs       rw,nosuid,noatime,nodev,size=16G,mode=775,uid=portage,gid=portage,x-mount.mkdir=775      0 0
 ```
 
 ## Networking
