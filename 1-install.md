@@ -259,8 +259,6 @@ emerge app-eselect/eselect-repository app-portage/gentoolkit app-portage/eix"
 ### Wi-Fi
 
 ```
-emerge --ask net-wireless/iwd
-
 echo "net-misc/networkmanager iwd -gtk-doc -ppp -wext" >> /etc/portage/package.use/net
 emerge --ask net-misc/networkmanager
 ```
