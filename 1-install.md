@@ -237,12 +237,12 @@ Located at /etc/fstab:
 UUID=<UUID>     /boot/efi               vfat        noatime     0 2
 
 # /dev/nvme0n1p2 and /dev/nvme1n1p1 in RAIDm1d0
-UUID=<UUID>     /                       btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@           0 0
-UUID=<UUID>     /home                   btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@home       0 0
-UUID=<UUID>     /.snapshots             btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@snapshots  0 0
-UUID=<UUID>     /var/db/repos           btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@repos      0 0
-UUID=<UUID>     /var/cache/binpkgs      btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@binpkgs    0 0
-UUID=<UUID>     /var/cache/distfiles    btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@distfiles  0 0
+UUID=<UUID>     /                       btrfs       noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@           0 0
+UUID=<UUID>     /home                   btrfs       noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@home       0 0
+UUID=<UUID>     /.snapshots             btrfs       noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@snapshots  0 0
+UUID=<UUID>     /var/db/repos           btrfs       noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@repos      0 0
+UUID=<UUID>     /var/cache/binpkgs      btrfs       noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@binpkgs    0 0
+UUID=<UUID>     /var/cache/distfiles    btrfs       noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@distfiles  0 0
 
 # tmpfs
 tmpfs           /var/tmp/portage        tmpfs       rw,nosuid,noatime,nodev,size=16G,mode=775,uid=portage,gid=portage,x-mount.mkdir=775      0 0
