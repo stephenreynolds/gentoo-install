@@ -38,6 +38,7 @@ mount -t btrfs -o defaults,noatime,compress-force=zstd:2,ssd,space_cache=v2 -L R
 btrfs subvolume create /mnt/gentoo/@
 btrfs subvolume create /mnt/gentoo/@home
 btrfs subvolume create /mnt/gentoo/@snapshots
+btrfs subvolume create /mnt/gentoo/@binpkgs
 btrfs subvolume create /mnt/gentoo/@distfiles
 btrfs subvolume create /mnt/gentoo/@repos
 umount /mnt/gentoo
@@ -48,11 +49,12 @@ umount /mnt/gentoo
 ```
 
 mount -t btrfs -o noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@ -L ROOT /mnt/gentoo
-mkdir -p /mnt/gentoo/{boot,home,var/cache/distfiles,var/db/repos}
+mkdir -p /mnt/gentoo/{boot,home,var/cache/binpkgs,var/cache/distfiles,var/db/repos}
 
 mount /dev/nvme0n1p1 /mnt/gentoo/boot
 mount -t btrfs -o noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@home -L ROOT /mnt/gentoo/home
 mount -t btrfs -o noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@snapshots -L ROOT /mnt/gentoo/.snapshots
+mount -t btrfs -o noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@binpkgs -L ROOT /mnt/gentoo/var/cache/binpkgs
 mount -t btrfs -o noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@distfiles -L ROOT /mnt/gentoo/var/cache/distfiles
 mount -t btrfs -o noatime,compress-force=zstd:2,ssd,space_cache=v2,subvol=@repos -L ROOT /mnt/gentoo/var/db/repos
 ```
@@ -240,6 +242,7 @@ UUID=<UUID>     /                       btrfs       noatime,compress=lzo,ssd,spa
 UUID=<UUID>     /home                   btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@home       0 0
 UUID=<UUID>     /.snapshots             btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@snapshots  0 0
 UUID=<UUID>     /var/db/repos           btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@repos      0 0
+UUID=<UUID>     /var/cache/binpkgs      btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@binpkgs    0 0
 UUID=<UUID>     /var/cache/distfiles    btrfs       noatime,compress=lzo,ssd,space_cache=v2,subvol=@distfiles  0 0
 
 # tmpfs
