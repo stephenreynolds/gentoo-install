@@ -220,7 +220,7 @@ make menuconfig
 Generate initramfs:
 ```
 emerge sys-kernel/dracut
-dracut --kver=5.15.74-gentoo --zstd
+dracut --kver=5.15.75-gentoo --zstd
 ```
 
 ## Create fstab
