@@ -157,7 +157,7 @@ Use the following command to find flags for input devices:
 ```
 # append to /etc/portage/make.conf
 
-USE="X"
+USE="X policykit"
 
 INPUT_DEVICES="libinput"
 VIDEO_CARDS="nvidia"
@@ -247,6 +247,12 @@ UUID=<UUID>     /var/cache/distfiles    btrfs       noatime,compress-force=zstd:
 # tmpfs
 tmpfs           /var/tmp/portage        tmpfs       rw,nosuid,noatime,nodev,size=16G,mode=775,uid=portage,gid=portage,x-mount.mkdir=775      0 0
 ```
+## Useful Utilities
+
+```
+mkdir -p /etc/portage/repos.conf
+emerge app-eselect/eselect-repository app-portage/gentoolkit app-portage/eix"
+```
 
 ## Networking
 
@@ -255,7 +261,7 @@ tmpfs           /var/tmp/portage        tmpfs       rw,nosuid,noatime,nodev,size
 ```
 emerge --ask net-wireless/iwd
 
-echo "net-misc/networkmanager iwd" >> /etc/portage/package.use/net
+echo "net-misc/networkmanager iwd -gtk-doc -ppp -wext" >> /etc/portage/package.use/net
 emerge --ask net-misc/networkmanager
 ```
 
