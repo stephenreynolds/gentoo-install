@@ -178,7 +178,6 @@ Uncomment the following locales:
 # /etc/locale.gen
 
 en_US.UTF-8 UTF-8
-ja_JP.UTF-8 UTF-8
 ```
 
 `locale-gen`
