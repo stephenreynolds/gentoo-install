@@ -144,6 +144,7 @@ eselect profile set 1
 ```
 emerge --ask app-portage/cpuid2cpuflags
 echo "*/* $(cpuid2cpuflags)" > /etc/portage/package.use/00cpu-flags
+touch /etc/portage/package.use/zz-autounmask
 ```
 
 ### Add USE flags and other make.conf variables
