@@ -228,7 +228,7 @@ dracut --kver=5.15.75-gentoo --zstd
 ```
 echo "" > /etc/fstab
 echo "UUID=$(lsblk -no UUID /dev/nvme0n1p1)" >> /etc/fstab
-for i in {1..5}; do echo "UUID=$(lsblk -no UUID /dev/nvme0n1p2)" >> /etc/fstab ; done
+for i in {1..6}; do echo "UUID=$(lsblk -no UUID /dev/nvme0n1p2)" >> /etc/fstab ; done
 ```
 
 Located at /etc/fstab:
